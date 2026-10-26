@@ -1,18 +1,35 @@
 import classNames from 'classnames';
-import { Todo } from '../../types/Todo';
 import { FiltersList } from '../../types/FiltersList';
+import React from 'react';
 
 type Props = {
-  todoList: Todo[];
   itemsLeft: number;
   filter: FiltersList;
   setFilter: (value: FiltersList) => void;
+  hasCompleted: boolean;
 };
+
+const FILTERS = [
+  { link: '#/', dataCy: 'FilterLinkAll', type: FiltersList.all, title: 'All' },
+  {
+    link: '#/active',
+    dataCy: 'FilterLinkActive',
+    type: FiltersList.active,
+    title: 'Active',
+  },
+  {
+    link: '#/completed',
+    dataCy: 'FilterLinkCompleted',
+    type: FiltersList.completed,
+    title: 'Completed',
+  },
+];
+
 export const Footer: React.FC<Props> = ({
-  todoList,
   itemsLeft,
   filter,
   setFilter,
+  hasCompleted,
 }) => {
   return (
     <footer className="todoapp__footer" data-cy="Footer">
@@ -21,45 +38,26 @@ export const Footer: React.FC<Props> = ({
       </span>
 
       <nav className="filter" data-cy="Filter">
-        <a
-          href="#/"
-          className={classNames('filter__link', {
-            selected: filter === FiltersList.all,
-          })}
-          data-cy="FilterLinkAll"
-          onClick={() => setFilter(FiltersList.all)}
-        >
-          All
-        </a>
-
-        <a
-          href="#/active"
-          className={classNames('filter__link', {
-            selected: filter === FiltersList.active,
-          })}
-          data-cy="FilterLinkActive"
-          onClick={() => setFilter(FiltersList.active)}
-        >
-          Active
-        </a>
-
-        <a
-          href="#/completed"
-          className={classNames('filter__link', {
-            selected: filter === FiltersList.completed,
-          })}
-          data-cy="FilterLinkCompleted"
-          onClick={() => setFilter(FiltersList.completed)}
-        >
-          Completed
-        </a>
+        {FILTERS.map(item => (
+          <a
+            key={item.type}
+            href={item.link}
+            className={classNames('filter__link', {
+              selected: filter === item.type,
+            })}
+            data-cy={item.dataCy}
+            onClick={() => setFilter(item.type)}
+          >
+            {item.title}
+          </a>
+        ))}
       </nav>
 
       <button
         type="button"
         className="todoapp__clear-completed"
         data-cy="ClearCompletedButton"
-        disabled={!todoList.some(todo => todo.completed)}
+        disabled={hasCompleted}
       >
         Clear completed
       </button>

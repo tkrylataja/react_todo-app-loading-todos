@@ -30,6 +30,8 @@ export const App: React.FC = () => {
     }
   });
 
+  const hasCompleted = !todoList.some(todo => todo.completed);
+
   useEffect(() => {
     getTodos()
       .then(setTodoList)
@@ -61,10 +63,10 @@ export const App: React.FC = () => {
 
         {todoList.length > 0 && (
           <Footer
-            todoList={todoList}
             itemsLeft={itemsLeft}
             filter={filter}
             setFilter={setFilter}
+            hasCompleted={hasCompleted}
           />
         )}
       </div>
